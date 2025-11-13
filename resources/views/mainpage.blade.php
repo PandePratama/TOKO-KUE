@@ -70,8 +70,8 @@
     <section id="products" class="py-5">
         <div class="container">
             <h2 class="mb-5 text-center" style="color:#b45309;">Produk Kami</h2>
-            <div class="row justify-content-center">
 
+            <div class="row justify-content-center">
                 @forelse ($products as $product)
                 <div class="col-6 col-md-4 col-lg-3 mb-4">
                     <div class="product-card text-center">
@@ -83,9 +83,20 @@
                             @endif
 
                             <!-- Hover Action Buttons -->
-                            <div class="product-actions">
-                                <button class="action-btn"><i class="bi bi-cart"></i></button>
-                                <button class="action-btn"><i class="bi bi-heart"></i></button>
+                            <div class="product-actions d-flex gap-2">
+                                <!-- Tambah ke Cart -->
+                                <form action="{{ route('cart.add') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="quantity" value="20">
+                                    <button type="submit" class="action-btn"><i class="bi bi-cart"></i></button>
+                                </form>
+
+                                <!-- Tambah ke Wishlist -->
+                                <form action="{{ route('wishlist.add', $product->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="action-btn"><i class="bi bi-heart"></i></button>
+                                </form>
                             </div>
                         </div>
 
@@ -99,11 +110,16 @@
                 @empty
                 <p class="text-center">Belum ada produk.</p>
                 @endforelse
+            </div>
 
+            <!-- Tombol "Lihat Produk Lainnya" -->
+            <div class="text-center mt-4">
+                <a href="{{ route('shop.index') }}" class="btn btn-outline-success rounded-pill px-4 py-2 fw-semibold">
+                    Lihat Produk Lainnya <i class="bi bi-arrow-right ms-1"></i>
+                </a>
             </div>
         </div>
     </section>
-
 
 
     <!-- Footer -->

@@ -34,14 +34,27 @@
                         <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="d-flex align-items-center">
                             @csrf
                             @method('PATCH')
+
+                            <!-- Tombol Kurang -->
                             <button type="submit" name="action" value="decrease"
                                 class="btn btn-sm btn-outline-dark me-2"
-                                {{ $cart->quantity <= 20 ? 'disabled' : '' }}>-</button>
-                            <span>{{ $cart->quantity }}</span>
+                                {{ $cart->quantity <= 1 ? 'disabled' : '' }}>-</button>
+
+                            <!-- Input Quantity -->
+                            <input type="number"
+                                name="quantity"
+                                value="{{ $cart->quantity }}"
+                                min="1"
+                                class="form-control text-center"
+                                style="width: 70px;"
+                                onchange="this.form.submit()">
+
+                            <!-- Tombol Tambah -->
                             <button type="submit" name="action" value="increase"
                                 class="btn btn-sm btn-outline-dark ms-2">+</button>
                         </form>
                     </div>
+
                     <div class="col-md-2 text-center">
                         <form action="{{ route('cart.remove', $cart->id) }}" method="POST">
                             @csrf

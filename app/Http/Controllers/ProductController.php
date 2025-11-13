@@ -93,7 +93,8 @@ class ProductController extends Controller
 
     public function mainPage()
     {
-        $products = Product::all();
+        $products = Product::latest()->take(4)->get();
+
         return view('mainpage', compact('products'));
     }
 

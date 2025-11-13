@@ -7,8 +7,10 @@
         </a>
 
         {{-- SEARCH BAR (Desktop) --}}
-        <form class="d-none d-lg-flex align-items-center border rounded-pill px-3 py-1 w-50 mx-3" action="" method="GET">
-            <input type="text" name="q" class="form-control border-0 bg-transparent" placeholder="Search Products">
+        <form class="d-none d-lg-flex align-items-center border rounded-pill px-3 py-1 w-50 mx-3"
+            action="{{ route('shop.index') }}" method="GET">
+            <input type="text" name="q" class="form-control border-0 bg-transparent"
+                placeholder="Search Products" value="{{ request('q') }}">
             <button class="btn btn-link text-muted" type="submit">
                 <i class="bi bi-search"></i>
             </button>
@@ -19,8 +21,18 @@
 
             {{-- Wishlist --}}
             <li class="nav-item me-3">
-                <a class="nav-link text-dark position-relative" href="#">
+                <a class="nav-link text-dark position-relative" href="{{ route('wishlist.index') }}">
                     <i class="bi bi-heart fs-5"></i>
+                    @if(Auth::check())
+                    @php
+                    $wishlistCount = \App\Models\Wishlist::where('user_id', Auth::id())->count();
+                    @endphp
+                    @if($wishlistCount > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ $wishlistCount }}
+                    </span>
+                    @endif
+                    @endif
                 </a>
             </li>
 
@@ -31,7 +43,7 @@
                     @if(Auth::check())
                     @php $cartCount = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity'); @endphp
                     @if($cartCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ $cartCount }}
                     </span>
                     @endif
@@ -72,9 +84,12 @@
         {{-- MOBILE ICONS --}}
         <div class="d-flex align-items-center d-lg-none">
             {{-- Search --}}
-            <button class="btn btn-link text-dark me-2" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch">
-                <i class="bi bi-search fs-5"></i>
-            </button>
+            <form class="d-flex align-items-center border rounded-pill px-3 py-1"
+                action="{{ route('shop.index') }}" method="GET">
+                <input type="text" name="q" class="form-control border-0 bg-transparent"
+                    placeholder="Search Products" value="{{ request('q') }}">
+                <button class="btn btn-link text-muted" type="submit"><i class="bi bi-search"></i></button>
+            </form>
 
             {{-- Cart --}}
             <a href="{{ route('cart.index') }}" class="btn btn-link text-dark position-relative me-2">
@@ -116,7 +131,7 @@
         <ul class="navbar-nav text-center">
             <li class="nav-item"><a href="{{ url('/') }}" class="nav-link fw-semibold">Home</a></li>
             <li class="nav-item"><a href="{{ url('/about') }}" class="nav-link fw-semibold">About</a></li>
-            <li class="nav-item"><a href="#" class="nav-link fw-semibold">Shop</a></li>
+            <li class="nav-item"><a href="{{ url('/shop') }}" class="nav-link fw-semibold">Shop</a></li>
             <li class="nav-item"><a href="{{ url('/contact') }}" class="nav-link fw-semibold">Contact</a></li>
         </ul>
 
@@ -145,7 +160,7 @@
         <nav class="nav">
             <a href="{{ url('/') }}" class="nav-link text-white fw-bold mx-3">Home</a>
             <a href="{{ url('/about') }}" class="nav-link text-white fw-bold mx-3">About</a>
-            <a href="#" class="nav-link text-white fw-bold mx-3">Shop</a>
+            <a href="{{ url('/shop') }}" class="nav-link text-white fw-bold mx-3">Shop</a>
             <a href="{{ url('/contact') }}" class="nav-link text-white fw-bold mx-3">Contact</a>
         </nav>
     </div>
