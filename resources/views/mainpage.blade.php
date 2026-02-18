@@ -76,8 +76,8 @@
                 <div class="col-6 col-md-4 col-lg-3 mb-4">
                     <div class="product-card text-center">
                         <div class="product-img position-relative">
-                            @if ($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                            @if ($product->primaryImage)
+                            <img src="{{ Storage::url($product->primaryImage->image_path) }}" alt="{{ $product->name }}">
                             @else
                             <img src="https://via.placeholder.com/400x400?text=No+Image" alt="No Image">
                             @endif

@@ -15,8 +15,8 @@
             <div class="col-6 col-md-4 col-lg-3 mb-4">
                 <div class="product-card text-center shadow-sm p-3 rounded position-relative">
                     <div class="product-img position-relative">
-                        @if ($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid rounded">
+                        @if ($product->primaryImage)
+                        <img src="{{ Storage::url($product->primaryImage->image_path) }}" alt="{{ $product->name }}" class="img-fluid rounded">
                         @else
                         <img src="https://via.placeholder.com/400x400?text=No+Image" alt="No Image" class="img-fluid rounded">
                         @endif

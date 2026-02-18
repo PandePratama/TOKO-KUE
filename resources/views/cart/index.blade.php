@@ -16,8 +16,8 @@
             <div class="card mb-3 shadow-sm border-0">
                 <div class="row g-0 align-items-center">
                     <div class="col-md-2 text-center p-2">
-                        @if($cart->product && $cart->product->image)
-                        <img src="{{ asset('storage/' . $cart->product->image) }}" class="img-fluid rounded" alt="{{ $cart->product->name }}">
+                        @if($cart->product && $cart->product->primaryImage)
+                        <img src="{{ Storage::url($cart->product->primaryImage->image_path) }}" class="img-fluid rounded" alt="{{ $cart->product->name }}">
                         @else
                         <img src="https://via.placeholder.com/100" class="img-fluid rounded" alt="No Image">
                         @endif

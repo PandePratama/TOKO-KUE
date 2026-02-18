@@ -29,7 +29,7 @@
 
             <!-- Gambar Produk -->
             <div class="me-3">
-                <img src="{{ asset('storage/' . $wishlist->product->image) }}"
+                <img src="{{ Storage::url($wishlist->product->primaryImage->image_path) }}"
                     alt="{{ $wishlist->product->name }}"
                     class="rounded"
                     style="width: 100px; height: 120px; object-fit: cover;">

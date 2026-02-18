@@ -25,8 +25,9 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 
 
 // Detail produk
-Route::get('/product/{id}', [ProductController::class, 'showDetail'])->name('product.detail');
-
+Route::get('/product/{product}', [ProductController::class, 'showDetail'])
+    ->name('product.detail');
+    
 // List produk publik
 Route::get('/products', [ProductController::class, 'index'])->name('products.public');
 
