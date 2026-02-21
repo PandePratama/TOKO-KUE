@@ -29,7 +29,7 @@ Route::get('/product/{product}', [ProductController::class, 'showDetail'])
     ->name('product.detail');
     
 // List produk publik
-Route::get('/products', [ProductController::class, 'index'])->name('products.public');
+Route::get('/products', [ProductController::class, 'index'])->name('shop.index');
 
 // | Authentication (Login, Register, Logout)
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -83,9 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/upload/{id}', [CheckoutController::class, 'uploadProof'])->name('checkout.upload');
 
     // Profile User
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/orders', [ProfileController::class, 'orders'])->name('profile.orders');
 
     // Wishlist

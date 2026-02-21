@@ -1,6 +1,6 @@
-@include('layouts.partials.navbar')
-
 @extends('layouts.main')
+
+@section('title', 'Checkout - JajanSnack')
 
 @section('content')
 <div class="container py-5">

@@ -1,5 +1,4 @@
 @extends('layouts.main')
-@include('layouts.partials.navbar')
 
 @section('title', $product->name)
 
@@ -22,17 +21,24 @@
 
         {{-- Detail Produk --}}
         <div class="col-md-6">
-            <h2 class="fw-bold mb-3">{{ $product->name }}</h2>
+            <h2 class="fw-bold">{{ $product->name }}</h2>
 
             {{-- Harga --}}
-            <div class="mb-3">
+            <div class="">
                 <span class="fs-4 text-danger fw-bold">
                     Rp {{ number_format($product->price, 0, ',', '.') }}
                 </span>
             </div>
 
+            {{-- Stok --}}
+            <div class="">
+                <span class="text-muted">
+                    Stok: {{ $product->stock_quantity }}
+                </span>
+            </div>
+
             {{-- Deskripsi --}}
-            <p class="text-muted mb-4">
+            <p class="text-muted">
                 {{ $product->description ?: 'Tidak ada deskripsi untuk produk ini.' }}
             </p>
 
@@ -42,56 +48,66 @@
 
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                <div class="input-group" style="max-width: 140px;">
+                {{-- Quantity (Minimal 20) --}}
+                <div class="input-group" style="max-width: 160px;">
                     <button type="button" class="btn btn-outline-secondary" id="decrease">−</button>
+
                     <input
                         type="number"
                         name="quantity"
-                        value="1"
-                        min="1"
-                        class="form-control text-center">
+                        value="20"
+                        min="20"
+                        step="1"
+                        class="form-control text-center fw-bold"
+                        required>
+
                     <button type="button" class="btn btn-outline-secondary" id="increase">+</button>
                 </div>
 
-                <button type="submit" class="btn fw-bold text-white" style="background-color:#b45309;">
+                {{-- Add to Cart --}}
+                <button type="submit"
+                    class="btn fw-bold text-white"
+                    style="background-color:#b45309;">
                     <i class="bi bi-cart"></i> ADD TO CART
                 </button>
 
+                {{-- Wishlist --}}
                 <button type="button" class="btn btn-outline-secondary">
                     <i class="bi bi-heart"></i>
                 </button>
             </form>
-
-            {{-- Whatsapp --}}
-            <div>
-                <strong>Whatsapp:</strong>
-                <a
-                    href="https://wa.me/628980592309"
-                    target="_blank"
-                    class="text-success text-decoration-none">
-                    +62 898-0592-309
-                </a>
-            </div>
         </div>
     </div>
 </div>
 
 {{-- Script tambah / kurang jumlah --}}
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", function() {
+
         const decrease = document.getElementById("decrease");
         const increase = document.getElementById("increase");
         const qtyInput = document.querySelector("input[name='quantity']");
+        const MIN_QTY = 20;
 
-        decrease.addEventListener("click", () => {
-            const val = parseInt(qtyInput.value) || 1;
-            if (val > 1) qtyInput.value = val - 1;
+        // Pastikan tidak bisa kurang dari 20 saat manual input
+        qtyInput.addEventListener("input", function() {
+            if (parseInt(this.value) < MIN_QTY || isNaN(this.value)) {
+                this.value = MIN_QTY;
+            }
         });
 
-        increase.addEventListener("click", () => {
-            const val = parseInt(qtyInput.value) || 1;
-            qtyInput.value = val + 1;
+        decrease.addEventListener("click", function() {
+            let value = parseInt(qtyInput.value) || MIN_QTY;
+            if (value > MIN_QTY) {
+                qtyInput.value = value - 1;
+            }
         });
+
+        increase.addEventListener("click", function() {
+            let value = parseInt(qtyInput.value) || MIN_QTY;
+            qtyInput.value = value + 1;
+        });
+
     });
 </script>
 @endsection

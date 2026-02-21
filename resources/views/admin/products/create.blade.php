@@ -1,4 +1,4 @@
-@extends('layouts.admin') {{-- sesuaikan dengan layout SB Admin 2 kamu --}}
+@extends('admin.layouts.admin')
 
 @section('title', 'Tambah Produk')
 

@@ -58,7 +58,7 @@
                     <i class="bi bi-person fs-5 me-1"></i> {{ Auth::user()->name }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="{{ route('profile.index') }}"><i class="bi bi-person me-2"></i>Profil</a></li>
+                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-person me-2"></i>Profil</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -145,7 +145,7 @@
         </div>
         @else
         <div class="text-center">
-            <a href="{{ route('profile.index') }}" class="btn btn-outline-success w-100 mb-2 rounded-pill">Profil Saya</a>
+            <a href="{{ route('profile.edit') }}" class="btn btn-outline-success w-100 mb-2 rounded-pill">Profil Saya</a>
             <form action="{{ route('logout') }}" method="POST">@csrf
                 <button class="btn btn-danger w-100 rounded-pill">Logout</button>
             </form>

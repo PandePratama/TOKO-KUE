@@ -1,6 +1,5 @@
 @extends('layouts.main')
-@include('layouts.partials.navbar')
-
+@section('title', 'Shop - JajanSnack')
 @section('content')
 <section id="products" class="py-5">
     <div class="container">
