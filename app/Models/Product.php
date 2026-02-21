@@ -14,6 +14,16 @@ class Product extends Model
         'description',
         'price',
         'stock_quantity',
-        'image',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)
+            ->where('is_primary', true);
+    }
 }

@@ -1,6 +1,5 @@
 @extends('layouts.main')
-@include('layouts.partials.navbar')
-
+@section('title', 'Hubungi Kami - JajanSnack')
 @section('content')
 <section class="contact-section py-5" style="background-color: #faf7f5;">
     <div class="container">
