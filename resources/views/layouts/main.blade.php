@@ -13,8 +13,10 @@
 </head>
 
 <body>
+    @include('components.navbar')
     @yield('content')
     @stack('scripts')
+    @include('components.footer')
 
 </body>
 
