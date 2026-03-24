@@ -1,28 +1,37 @@
-{{-- resources/views/profile/layout/sidebar.blade.php --}}
-<div class="col-md-4">
-    <div class="card shadow-sm">
-        <div class="card-body text-center" style="background-color:#5f89a2; color:white; border-radius:8px;">
-            <img src="{{ asset('images/avatar.svg') }}" class="rounded-circle mb-3" alt="Profile Picture" width="100">
-            <p class="fw-bold">{{ $user->name }}</p>
-            <h6>{{ $user->email }}</h6>
-            <p class="mb-1">{{ $user->phone_number ?? 'No phone' }}</p>
+<div class="col-lg-3 col-md-4 mb-4">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+        <!-- Header Profile -->
+        <div class="text-center p-4 text-white" style="background: linear-gradient(135deg,#5f89a2,#3f6b85);">
+            <img src="{{ asset('images/avatar.svg') }}"
+                class="rounded-circle border border-3 border-white shadow-sm mb-3"
+                width="90">
+
+            <h6 class="fw-bold mb-1">{{ $user->name }}</h6>
+            <small>{{ $user->email }}</small>
+            <div class="mt-2 small">
+                {{ $user->phone_number ?? 'No phone number' }}
+            </div>
         </div>
 
+        <!-- Menu -->
         <div class="list-group list-group-flush">
+
             <a href="{{ route('profile.edit') }}"
-                class="list-group-item list-group-item-action {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
-                <i class="bi bi-person"></i> Edit Profile
+                class="list-group-item list-group-item-action {{ request()->routeIs('profile.edit') ? 'active fw-bold' : '' }}">
+                <i class="bi bi-person me-2"></i> Edit Profile
             </a>
-            <a href="{{ route('profile.orders') }}" class="list-group-item list-group-item-action">
-                <i class="bi bi-bag"></i> Pesanan
+
+            <a href="{{ route('profile.orders') }}"
+                class="list-group-item list-group-item-action {{ request()->routeIs('profile.orders') ? 'active fw-bold' : '' }}">
+                <i class="bi bi-bag me-2"></i> Pesanan Saya
             </a>
-            <a href="#" class="list-group-item list-group-item-action">
-                <i class="bi bi-question-circle"></i> Pusat Bantuan
-            </a>
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="list-group-item list-group-item-action text-danger">
-                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                <button type="submit"
+                    class="list-group-item list-group-item-action text-danger">
+                    <i class="bi bi-box-arrow-right me-2"></i> Sign Out
                 </button>
             </form>
         </div>

@@ -1,5 +1,3 @@
-@include('layouts.partials.navbar')
-
 @extends('layouts.main')
 
 @section('title', 'Tentang Kami')
