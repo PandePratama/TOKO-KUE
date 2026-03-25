@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderStatusHistory;
 use App\Models\PickupDate;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -90,6 +92,13 @@ class CheckoutController extends Controller
                 'pickup_date'    => $pickupDate->toDateString(),
             ]);
 
+            // Catat riwayat status awal
+            OrderStatusHistory::create([
+                'order_id' => $order->id,
+                'status'   => 'pending',
+                'note'     => 'Pesanan berhasil dibuat.',
+            ]);
+
             // Simpan order items & kurangi stok
             foreach ($cartItems as $item) {
 
@@ -108,11 +117,26 @@ class CheckoutController extends Controller
 
             // Upload bukti transfer jika ada
             if ($request->payment_method === 'transfer' && $request->hasFile('payment_proof')) {
+                $request->validate([
+                    'payment_proof' => [
+                        'required',
+                        'file',
+                        'mimes:jpg,jpeg,png,pdf',
+                        'max:5120', // 5 MB
+                    ],
+                ]);
+
                 $path = $request->file('payment_proof')->store('payments', 'public');
 
                 $order->update([
                     'payment_proof' => $path,
                     'status' => 'waiting_verification'
+                ]);
+
+                OrderStatusHistory::create([
+                    'order_id' => $order->id,
+                    'status'   => 'waiting_verification',
+                    'note'     => 'Bukti transfer diunggah, menunggu verifikasi admin.',
                 ]);
             }
 
@@ -123,7 +147,6 @@ class CheckoutController extends Controller
 
             return redirect()->route('checkout.success', $order->id)
                 ->with('success', 'Pesanan berhasil dibuat!');
-
         } catch (\Exception $e) {
 
             DB::rollBack();
@@ -134,14 +157,19 @@ class CheckoutController extends Controller
 
     public function success($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with(['items.product', 'statusHistories'])->findOrFail($id);
         return view('checkout.success', compact('order'));
     }
 
     public function uploadProof(Request $request, $id)
     {
         $request->validate([
-            'payment_proof' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+            'payment_proof' => [
+                'required',
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:5120', // maks 5 MB
+            ],
         ]);
 
         $order = Order::findOrFail($id);
@@ -153,7 +181,25 @@ class CheckoutController extends Controller
             'status' => 'waiting_verification'
         ]);
 
+        OrderStatusHistory::create([
+            'order_id' => $order->id,
+            'status'   => 'waiting_verification',
+            'note'     => 'Bukti transfer diunggah, menunggu verifikasi admin.',
+        ]);
+
         return redirect()->route('checkout.success', $id)
             ->with('success', 'Bukti transfer berhasil diupload, menunggu verifikasi.');
+    }
+
+    public function downloadInvoice($id)
+    {
+        $order = Order::with(['items.product', 'user', 'statusHistories'])
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        $pdf = Pdf::loadView('invoice.invoice', compact('order'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('invoice-' . str_pad($order->id, 5, '0', STR_PAD_LEFT) . '.pdf');
     }
 }

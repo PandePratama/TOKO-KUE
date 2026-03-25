@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PickupDateController;
 use App\Http\Controllers\ShopController;
@@ -27,7 +28,7 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 // Detail produk
 Route::get('/product/{product}', [ProductController::class, 'showDetail'])
     ->name('product.detail');
-    
+
 // List produk publik
 Route::get('/products', [ProductController::class, 'index'])->name('shop.index');
 
@@ -44,9 +45,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Produk
     Route::resource('products', ProductController::class)->names('products');
@@ -80,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/invoice/{id}', [CheckoutController::class, 'downloadInvoice'])->name('checkout.invoice');
     Route::post('/checkout/upload/{id}', [CheckoutController::class, 'uploadProof'])->name('checkout.upload');
 
     // Profile User
