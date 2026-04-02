@@ -6,7 +6,9 @@
         <h2 class="mb-4 text-center" style="color:#b45309;">SHOP</h2>
 
         @if(request('q'))
-        <p class="text-center mb-4">Hasil pencarian untuk: <strong>{{ request('q') }}</strong></p>
+        <p class="text-center mb-4">Hasil pencarian untuk: <strong>{{ request('q') }}</strong>
+            ({{ $products->total() }} produk)
+        </p>
         @endif
 
         <div class="row justify-content-center">
@@ -15,25 +17,23 @@
                 <div class="product-card text-center shadow-sm p-3 rounded position-relative">
                     <div class="product-img position-relative">
                         @if ($product->primaryImage)
-                        <img src="{{ Storage::url($product->primaryImage->image_path) }}" alt="{{ $product->name }}" class="img-fluid rounded">
+                        <img src="{{ Storage::url($product->primaryImage->image_path) }}" alt="{{ $product->name }}" class="img-fluid rounded" loading="lazy">
                         @else
                         <img src="https://via.placeholder.com/400x400?text=No+Image" alt="No Image" class="img-fluid rounded">
                         @endif
 
                         <!-- Hover Action Buttons -->
                         <div class="product-actions d-flex gap-2 justify-content-center">
-                            <!-- Tambah ke Cart -->
                             <form action="{{ route('cart.add') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <input type="hidden" name="quantity" value="20">
-                                <button type="submit" class="action-btn"><i class="bi bi-cart"></i></button>
+                                <button type="submit" class="action-btn" title="Tambah ke Keranjang"><i class="bi bi-cart"></i></button>
                             </form>
 
-                            <!-- Tambah ke Wishlist -->
                             <form action="{{ route('wishlist.add', $product->id) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="action-btn"><i class="bi bi-heart"></i></button>
+                                <button type="submit" class="action-btn" title="Tambah ke Wishlist"><i class="bi bi-heart"></i></button>
                             </form>
                         </div>
                     </div>
@@ -41,15 +41,29 @@
                     <div class="product-info mt-3">
                         <h5 class="product-name">{{ $product->name }}</h5>
                         <p class="product-price fw-bold text-success">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                        @if($product->stock_quantity === 0)
+                        <span class="badge bg-danger">Habis</span>
+                        @endif
                         <a href="{{ route('product.detail', $product->id) }}" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
             @empty
-            <p class="text-center">Belum ada produk.</p>
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-search" style="font-size:3rem;opacity:.3;"></i>
+                <p class="mt-3 text-muted">Produk tidak ditemukan.</p>
+                <a href="{{ route('shop.index') }}" class="btn btn-outline-secondary rounded-pill px-4">Lihat Semua Produk</a>
+            </div>
             @endforelse
-
         </div>
+
+        {{-- Pagination --}}
+        @if($products->hasPages())
+        <div class="d-flex justify-content-center mt-4">
+            {{ $products->links('pagination::bootstrap-5') }}
+        </div>
+        @endif
+
     </div>
 </section>
 @endsection

@@ -9,17 +9,17 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::query();
+        $query = Product::with('primaryImage')->newQuery();
 
-        // jika user mencari produk
-        if ($request->has('q') && !empty($request->q)) {
+        if ($request->filled('q')) {
             $search = $request->q;
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
         }
 
-        // urutkan produk terbaru
-        $products = $query->latest()->get();
+        $products = $query->latest()->paginate(12)->withQueryString();
 
         return view('shop', compact('products'));
     }

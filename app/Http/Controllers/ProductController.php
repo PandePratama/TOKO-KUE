@@ -128,6 +128,13 @@ class ProductController extends Controller
     public function showDetail(Product $product)
     {
         $product->load('primaryImage');
-        return view('product-detail', compact('product'));
+
+        $related = Product::with('primaryImage')
+            ->where('id', '!=', $product->id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        return view('product-detail', compact('product', 'related'));
     }
 }
