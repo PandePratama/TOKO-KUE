@@ -24,12 +24,12 @@ class ContactController extends Controller
         // Kirim email ke admin (gunakan MAIL_FROM_ADDRESS sebagai tujuan)
         Mail::raw(
             "Pesan dari: {$validated['name']} <{$validated['email']}>\n\n" .
-            "Subjek: {$validated['subject']}\n\n" .
-            $validated['message'],
+                "Subjek: {$validated['subject']}\n\n" .
+                $validated['message'],
             function ($mail) use ($validated) {
                 $mail->to(config('mail.from.address', 'admin@jajansnack.com'))
-                     ->replyTo($validated['email'], $validated['name'])
-                     ->subject('[JajanSnack Kontak] ' . $validated['subject']);
+                    ->replyTo($validated['email'], $validated['name'])
+                    ->subject('[JajanSnack Kontak] ' . $validated['subject']);
             }
         );
 

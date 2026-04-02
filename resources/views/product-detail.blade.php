@@ -109,11 +109,11 @@
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
                     @if($r->primaryImage)
                     <img src="{{ Storage::url($r->primaryImage->image_path) }}"
-                         alt="{{ $r->name }}" class="card-img-top"
-                         style="height:180px;object-fit:cover;" loading="lazy">
+                        alt="{{ $r->name }}" class="card-img-top"
+                        style="height:180px;object-fit:cover;" loading="lazy">
                     @else
                     <div class="bg-light d-flex align-items-center justify-content-center"
-                         style="height:180px;"><i class="bi bi-image text-muted fs-2"></i></div>
+                        style="height:180px;"><i class="bi bi-image text-muted fs-2"></i></div>
                     @endif
                     <div class="card-body p-3">
                         <h6 class="fw-semibold text-dark mb-1">{{ $r->name }}</h6>
@@ -131,25 +131,25 @@
 
 @push('scripts')
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const decrease = document.getElementById("decrease");
         const increase = document.getElementById("increase");
         const qtyInput = document.querySelector("input[name='quantity']");
         if (!qtyInput) return;
         const MIN_QTY = 20;
 
-        qtyInput.addEventListener("input", function () {
+        qtyInput.addEventListener("input", function() {
             if (parseInt(this.value) < MIN_QTY || isNaN(parseInt(this.value))) {
                 this.value = MIN_QTY;
             }
         });
 
-        decrease.addEventListener("click", function () {
+        decrease.addEventListener("click", function() {
             let value = parseInt(qtyInput.value) || MIN_QTY;
             if (value > MIN_QTY) qtyInput.value = value - 1;
         });
 
-        increase.addEventListener("click", function () {
+        increase.addEventListener("click", function() {
             let value = parseInt(qtyInput.value) || MIN_QTY;
             qtyInput.value = value + 1;
         });
