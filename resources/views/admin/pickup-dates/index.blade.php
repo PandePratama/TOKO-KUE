@@ -1,4 +1,6 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
+
+@section('title', 'Tanggal Libur Pengiriman')
 
 @section('content')
 <div class="container-fluid">
@@ -13,7 +15,8 @@
             <form method="POST" action="{{ route('admin.pickup-dates.store') }}" class="form-inline mb-3">
                 @csrf
                 <label for="pickup_date" class="mr-2">Tanggal Libur:</label>
-                <input type="date" name="pickup_date" id="pickup_date" class="form-control mr-2" required min="{{ now()->addDays(3)->toDateString() }}">
+                <input type="date" name="pickup_date" id="pickup_date" class="form-control mr-2"
+                    required min="{{ now()->addDays(3)->toDateString() }}">
                 <input type="text" name="note" placeholder="Catatan (opsional)" class="form-control mr-2">
                 <button type="submit" class="btn btn-primary">Tambah</button>
             </form>
@@ -23,8 +26,8 @@
             @enderror
 
             <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="thead-light">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
                         <tr>
                             <th>#</th>
                             <th>Tanggal Libur</th>
@@ -39,7 +42,8 @@
                             <td>{{ \Carbon\Carbon::parse($holiday->pickup_date)->format('d M Y') }}</td>
                             <td>{{ $holiday->note ?? '-' }}</td>
                             <td>
-                                <form method="POST" action="{{ route('admin.pickup-dates.destroy', $holiday->id) }}" onsubmit="return confirm('Hapus tanggal ini?')">
+                                <form method="POST" action="{{ route('admin.pickup-dates.destroy', $holiday->id) }}"
+                                    onsubmit="return confirm('Hapus tanggal ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Hapus</button>
@@ -48,7 +52,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center">Belum ada tanggal libur</td>
+                            <td colspan="4" class="text-center text-muted">Belum ada tanggal libur.</td>
                         </tr>
                         @endforelse
                     </tbody>

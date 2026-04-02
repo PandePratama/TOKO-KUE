@@ -63,27 +63,42 @@ class CartController extends Controller
     {
         $cart = Cart::findOrFail($id);
 
-        if ($request->action === 'increase') {
-            $cart->quantity += 1;
-        } elseif ($request->action === 'decrease') {
-            $cart->quantity -= 1;
+        // Jika user klik tombol + atau -
+        if ($request->has('action')) {
+            if ($request->action === 'increase') {
+                $cart->quantity += 1;
+            } elseif ($request->action === 'decrease') {
+                $cart->quantity -= 1;
 
-            // ✅ Jika quantity 0 → hapus produk
-            if ($cart->quantity <= 0) {
-                $cart->delete();
-                return redirect()->route('cart.index')->with('success', 'Produk dihapus dari keranjang');
+                // Jika quantity < 20 → kembalikan minimal 20
+                if ($cart->quantity < 20) {
+                    $cart->quantity = 20;
+                }
+
+                // Jika quantity 0 atau kurang → hapus produk
+                if ($cart->quantity <= 0) {
+                    $cart->delete();
+                    return redirect()->route('cart.index')->with('success', 'Produk dihapus dari keranjang');
+                }
+            }
+        }
+        // Jika user mengetik jumlah manual di input number
+        elseif ($request->has('quantity')) {
+            $newQty = (int) $request->quantity;
+
+            // Validasi minimal 20
+            if ($newQty < 20) {
+                $newQty = 20;
             }
 
-            // ✅ Jika quantity kurang dari 20 → kembalikan jadi 20
-            if ($cart->quantity < 20) {
-                $cart->quantity = 20;
-            }
+            $cart->quantity = $newQty;
         }
 
         $cart->save();
 
         return redirect()->route('cart.index')->with('success', 'Keranjang berhasil diperbarui');
     }
+
 
     /**
      * Hapus produk dari keranjang

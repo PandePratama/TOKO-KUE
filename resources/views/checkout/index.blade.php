@@ -1,6 +1,6 @@
-@include('layouts.partials.navbar')
-
 @extends('layouts.main')
+
+@section('title', 'Checkout - JajanSnack')
 
 @section('content')
 <div class="container py-5">
@@ -70,7 +70,13 @@
 
                         <div id="transferUpload" class="mb-4">
                             <label for="payment_proof" class="form-label text-muted">Upload Bukti Transfer</label>
-                            <input type="file" name="payment_proof" id="payment_proof" class="form-control" accept="image/*">
+                            <input type="file" name="payment_proof" id="payment_proof"
+                                class="form-control @error('payment_proof') is-invalid @enderror"
+                                accept="image/jpeg,image/png,application/pdf">
+                            <div class="form-text text-muted">Format: JPG, PNG, PDF &bull; Maks. 5 MB</div>
+                            @error('payment_proof')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <!-- Bayar di Toko -->

@@ -4,102 +4,137 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // Tampilkan semua produk (untuk admin)
+    // =========================
+    // ADMIN
+    // =========================
+
     public function index()
     {
-        $products = Product::latest()->get();
+        $products = Product::with('primaryImage')->latest()->get();
         return view('admin.products.index', compact('products'));
     }
 
-    // Form tambah produk
     public function create()
     {
         return view('admin.products.create');
     }
 
-    // Simpan produk baru
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'name'           => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'price'          => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->only(['name', 'description', 'price', 'stock_quantity']);
+        // simpan produk TANPA image
+        $product = Product::create($validated);
 
+        // simpan image ke product_images
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
-            $data['image'] = $path;
+
+            $product->images()->create([
+                'image_path' => $path,
+                'is_primary' => true,
+            ]);
         }
 
-        Product::create($data);
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan');
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil ditambahkan');
     }
 
-    // Form edit produk
-    public function edit($id)
+    public function show(Product $product)
     {
-        $product = Product::findOrFail($id);
-        return view('admin.products.edit', compact('product'));
-    }
-
-    // Update produk
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
-        $product = Product::findOrFail($id);
-
-        $data = $request->only(['name', 'description', 'price', 'stock_quantity']);
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $data['image'] = $path;
-        }
-
-        $product->update($data);
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui');
-    }
-
-    // Hapus produk
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus');
-    }
-
-    // show single product
-    public function show($id)
-    {
-        $product = Product::findOrFail($id);
+        $product->load('primaryImage');
         return view('admin.products.show', compact('product'));
     }
 
+    public function edit(Product $product)
+    {
+        $product->load('primaryImage');
+        return view('admin.products.edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'name'           => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'price'          => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+            'image'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $product->update($validated);
+
+        if ($request->hasFile('image')) {
+
+            // hapus image lama
+            foreach ($product->images as $img) {
+                Storage::disk('public')->delete($img->image_path);
+            }
+            $product->images()->delete();
+
+            // simpan image baru
+            $path = $request->file('image')->store('products', 'public');
+
+            $product->images()->create([
+                'image_path' => $path,
+                'is_primary' => true,
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil diperbarui');
+    }
+
+    public function destroy(Product $product)
+    {
+        foreach ($product->images as $img) {
+            Storage::disk('public')->delete($img->image_path);
+        }
+
+        $product->images()->delete();
+        $product->delete();
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil dihapus');
+    }
+
+    // =========================
+    // FRONTEND
+    // =========================
+
     public function mainPage()
     {
-        $products = Product::all();
+        $products = Product::with('primaryImage')
+            ->latest()
+            ->take(4)
+            ->get();
+
         return view('mainpage', compact('products'));
     }
 
-    public function showDetail($id)
+    public function showDetail(Product $product)
     {
-        $product = Product::findOrFail($id);
-        return view('product-detail', compact('product'));
+        $product->load('primaryImage');
+
+        $related = Product::with('primaryImage')
+            ->where('id', '!=', $product->id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        return view('product-detail', compact('product', 'related'));
     }
 }
