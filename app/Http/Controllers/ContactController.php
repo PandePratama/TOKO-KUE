@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
@@ -21,19 +23,34 @@ class ContactController extends Controller
             'message' => 'required|string|min:10|max:2000',
         ]);
 
-        // Kirim email ke admin (gunakan MAIL_FROM_ADDRESS sebagai tujuan)
-        Mail::raw(
-            "Pesan dari: {$validated['name']} <{$validated['email']}>\n\n" .
-                "Subjek: {$validated['subject']}\n\n" .
-                $validated['message'],
-            function ($mail) use ($validated) {
-                $mail->to(config('mail.from.address', 'admin@jajansnack.com'))
-                    ->replyTo($validated['email'], $validated['name'])
-                    ->subject('[JajanSnack Kontak] ' . $validated['subject']);
-            }
-        );
+        try {
+            // Kirim email ke admin menggunakan Mailable class
+            Mail::to(config('mail.from.address', 'admin@jajansnack.com'))
+                ->send(new ContactMail(
+                    $validated['name'],
+                    $validated['email'],
+                    $validated['subject'],
+                    $validated['message']
+                ));
 
-        return redirect()->route('contact')
-            ->with('success', 'Pesan Anda berhasil dikirim! Kami akan menghubungi Anda segera.');
+            Log::info('Contact form email sent successfully', [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'subject' => $validated['subject'],
+            ]);
+
+            return redirect()->route('contact')
+                ->with('success', 'Pesan Anda berhasil dikirim! Kami akan menghubungi Anda segera.');
+        } catch (\Exception $e) {
+            Log::error('Failed to send contact form email', [
+                'error' => $e->getMessage(),
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
+
+            return redirect()->route('contact')
+                ->with('error', 'Terjadi kesalahan saat mengirim pesan. Silakan coba lagi nanti.')
+                ->withInput();
+        }
     }
 }
