@@ -9,11 +9,11 @@
             <div class="overlay"></div>
             <div class="container position-relative">
                 <h1 class="display-4 fw-bold">
-                    Jajanan Tradisional Kaliadrem
+                    Jajanan Tradisional Bali Kaliadrem
                 </h1>
 
                 <p class="lead mb-4">
-                    Rasakan keautentikan rasa jajanan tradisional Bali
+                    Rasakan keautentikan rasa jajanan tradisional Bali 
                 </p>
 
                 <a href="#products" class="btn btn-light btn-lg fw-semibold">
