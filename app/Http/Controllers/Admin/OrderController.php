@@ -24,6 +24,11 @@ class OrderController extends Controller
 
     public function approve(Order $order)
     {
+        // Cegah perubahan status jika sudah di-approve atau di-decline sebelumnya
+        if ($order->status !== 'pending') {
+            return redirect()->route('admin.orders.index')->with('error', 'Status pesanan tidak dapat diubah. Pesanan sudah diproses sebelumnya.');
+        }
+
         $order->update(['status' => 'paid']);
 
         OrderStatusHistory::create([
@@ -37,6 +42,11 @@ class OrderController extends Controller
 
     public function decline(Order $order)
     {
+        // Cegah perubahan status jika sudah di-approve atau di-decline sebelumnya
+        if ($order->status !== 'pending') {
+            return redirect()->route('admin.orders.index')->with('error', 'Status pesanan tidak dapat diubah. Pesanan sudah diproses sebelumnya.');
+        }
+
         DB::transaction(function () use ($order) {
             // Kembalikan stok hanya jika order belum pernah di-decline sebelumnya
             if (!in_array($order->status, ['declined', 'canceled'])) {

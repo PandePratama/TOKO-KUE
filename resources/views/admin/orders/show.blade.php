@@ -20,6 +20,7 @@
     <img src="{{ asset('storage/'.$order->payment_proof) }}" class="img-fluid mb-3" style="max-width:300px;">
     @endif
 
+    @if($order->status === 'pending')
     <form action="{{ route('admin.orders.approve', $order->id) }}" method="POST" class="d-inline">
         @csrf
         <button type="submit" class="btn btn-success">Approve</button>
@@ -29,5 +30,6 @@
         @csrf
         <button type="submit" class="btn btn-danger">Decline</button>
     </form>
+    @endif
 </div>
 @endsection
