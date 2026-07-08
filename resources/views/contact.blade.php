@@ -20,25 +20,25 @@
                         </li>
                         <li class="mb-3">
                             <i class="bi bi-telephone-fill me-2" style="color:#7f574c;"></i>
-                            <strong>Telepon:</strong> +62 812-3456-7890
+                            <strong>Telepon:</strong> +62 51-002-458-65
                         </li>
                         <li class="mb-3">
                             <i class="bi bi-envelope-fill me-2" style="color:#7f574c;"></i>
-                            <strong>Email:</strong> support@jajansnack.com
+                            <strong>Email:</strong> sariinten011@gmail.com
                         </li>
                         <li>
                             <i class="bi bi-clock-fill me-2" style="color:#7f574c;"></i>
-                            <strong>Jam Operasional:</strong> Senin – Sabtu, 08.00 – 18.00 WITA
+                            <strong>Jam Operasional:</strong> Senin – Minggu, 08.00 – 210 WITA
                         </li>
                     </ul>
 
                     <div class="mt-4">
                         <h5 class="fw-semibold mb-3" style="color: #7f574c;">Ikuti Kami</h5>
                         <div class="d-flex gap-3">
-                            <a href="#" class="fs-4" style="color:#7f574c;"><i class="bi bi-facebook"></i></a>
+                            <!-- <a href="#" class="fs-4" style="color:#7f574c;"><i class="bi bi-facebook"></i></a> -->
                             <a href="https://www.instagram.com/_sariinten/" class="fs-4" style="color:#7f574c;"><i class="bi bi-instagram"></i></a>
                             <a href="#" class="fs-4" style="color:#7f574c;"><i class="bi bi-whatsapp"></i></a>
-                            <a href="#" class="fs-4" style="color:#7f574c;"><i class="bi bi-tiktok"></i></a>
+                            <!-- <a href="#" class="fs-4" style="color:#7f574c;"><i class="bi bi-tiktok"></i></a> -->
                         </div>
                     </div>
 

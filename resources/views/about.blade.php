@@ -45,7 +45,7 @@
                 <h2 class="fw-bold mb-3" style="color:#b45309;">Tentang UMKM Sari Inten</h2>
                 <p class="text-muted mb-4" style="text-align: justify;">
                     <strong>UMKM Sari Inten</strong> adalah pelaku usaha lokal yang berkomitmen menghadirkan jajanan tradisional Bali dengan cita rasa otentik namun tetap higienis dan modern dalam kemasan.
-                    Berdiri sejak tahun 2015 di daerah Gianyar, Bali, Sari Inten terus berkembang menjadi salah satu produsen Kaliadrem yang dipercaya oleh masyarakat lokal maupun wisatawan.
+                    Berdiri sejak tahun 2000 di daerah Badung, Bali, Sari Inten terus berkembang menjadi salah satu produsen Kaliadrem yang dipercaya oleh masyarakat lokal maupun wisatawan.
                 </p>
                 <p class="text-muted" style="text-align: justify;">
                     Dengan semangat *“Ngajegang Warisan Leluhur”* (menjaga warisan leluhur), Sari Inten tidak hanya menjual jajanan,
